@@ -1,0 +1,12 @@
+/node_modules
+/Lib
+/DLLs
+/Doc
+/include
+/libs
+/Scripts
+/tcl
+/Tools
+/venv
+/model/model.h5
+
