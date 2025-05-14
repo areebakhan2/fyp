@@ -1202,13 +1202,11 @@
 //   );
 // }
 
-
 import { ChangeEvent, useState } from "react";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
-import { FaCheckCircle } from "react-icons/fa";
+
 import { Line, Bar } from "react-chartjs-2";
 import { useRef } from "react";
-import { useReactToPrint, UseReactToPrintOptions } from "react-to-print";
 
 import {
   Chart as ChartJS,
@@ -1265,9 +1263,12 @@ export default function OcularToxoplasmosis() {
   const [isFemale, setIsFemale] = useState(false);
   const [isPregnant, setIsPregnant] = useState(false);
   const [isPlanningPregnancy, setIsPlanningPregnancy] = useState(false);
-  const [showCongenitalPrediction, setShowCongenitalPrediction] = useState(false);
+  const [showCongenitalPrediction, setShowCongenitalPrediction] =
+    useState(false);
   const [ocularRiskScore, setOcularRiskScore] = useState<number | null>(null);
-  const [congenitalRiskScore, setCongenitalRiskScore] = useState<number | null>(null);
+  const [congenitalRiskScore, setCongenitalRiskScore] = useState<number | null>(
+    null
+  );
 
   const [formData, setFormData] = useState<FormData>({
     gender: "",
@@ -1297,7 +1298,7 @@ export default function OcularToxoplasmosis() {
   const handleAgreeClick = () => {
     setShowForm(true);
   };
-  
+
   const componentRef = useRef<HTMLDivElement>(null);
   // const handlePrint = useReactToPrint({
   //   content: () => componentRef.current,
@@ -1318,7 +1319,6 @@ export default function OcularToxoplasmosis() {
   //   `,
   // });
 
-   
   const handleGenderChange = (event: ChangeEvent<HTMLInputElement>) => {
     const gender = event.target.value;
     setIsFemale(gender === "female");
@@ -1336,37 +1336,42 @@ export default function OcularToxoplasmosis() {
 
     if (category === "immuneCondition") {
       if (value === "None" && isChecked) {
-        setFormData(prevData => ({
+        setFormData((prevData) => ({
           ...prevData,
-          immuneCondition: ["None"]
+          immuneCondition: ["None"],
         }));
         return;
       } else if (value === "None" && !isChecked) {
-        setFormData(prevData => ({
+        setFormData((prevData) => ({
           ...prevData,
-          immuneCondition: []
+          immuneCondition: [],
         }));
         return;
       }
 
       if (isChecked) {
-        setFormData(prevData => ({
+        setFormData((prevData) => ({
           ...prevData,
-          immuneCondition: [...prevData.immuneCondition.filter(item => item !== "None"), value]
+          immuneCondition: [
+            ...prevData.immuneCondition.filter((item) => item !== "None"),
+            value,
+          ],
         }));
       } else {
-        setFormData(prevData => ({
+        setFormData((prevData) => ({
           ...prevData,
-          immuneCondition: prevData.immuneCondition.filter(item => item !== value)
+          immuneCondition: prevData.immuneCondition.filter(
+            (item) => item !== value
+          ),
         }));
       }
       return;
     }
 
     // For other checkbox fields (though your form doesn't seem to have others)
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
-      [category]: isChecked ? "yes" : "no"
+      [category]: isChecked ? "yes" : "no",
     }));
   };
 
@@ -1404,22 +1409,22 @@ export default function OcularToxoplasmosis() {
       "catExposure",
       "rawMeatConsumption",
     ];
-    
+
     if (isFemale) {
       requiredFields.push("pregnancyStatus");
       if (isPregnant || isPlanningPregnancy) {
         requiredFields.push("trimester");
       }
     }
-    
+
     // Check all required fields have values
     const hasAllRequiredFields = requiredFields.every(
       (field) => formData[field] !== ""
     );
-    
+
     // Check immuneCondition has at least one selection
     const hasImmuneCondition = formData.immuneCondition.length > 0;
-    
+
     return hasAllRequiredFields && hasImmuneCondition;
   };
 
@@ -1488,7 +1493,8 @@ export default function OcularToxoplasmosis() {
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (isFormValid()) {
-      const { ocularRiskScore, congenitalRiskScore } = calculateRiskScores(formData);
+      const { ocularRiskScore, congenitalRiskScore } =
+        calculateRiskScores(formData);
       setOcularRiskScore(ocularRiskScore);
       setCongenitalRiskScore(congenitalRiskScore);
       setShowForm(false);
@@ -1802,7 +1808,10 @@ export default function OcularToxoplasmosis() {
         )}
 
         {(ocularRiskScore !== null || congenitalRiskScore !== null) && (
-          <div className="text-center no-print" style={{ marginBottom: "20px" }}>
+          <div
+            className="text-center no-print"
+            style={{ marginBottom: "20px" }}
+          >
             {/* <Button
               variant="info"
               onClick={handlePrint}
